@@ -1,3 +1,5 @@
+// Quick Mathematical Computations
+
 #include <stdio.h>
 
 // Lambda macro to create a named lambda function with a unique name
