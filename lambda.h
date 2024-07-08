@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include<pthread.h>
 
 
 // summarized list of all of the macros defined in the lambda.h
@@ -768,7 +769,8 @@ typedef void* (*lambda_t)(void*);
     } while (0)
 
 
-/********************* Concurrency and Synchronization Macros ***************************/
+//********************* Concurrency and Synchronization Macros ***************************/
+
 /**
  * @brief Macro for defining a mutex.
  *
@@ -780,21 +782,21 @@ typedef void* (*lambda_t)(void*);
  * ```
  */
 #define DEFINE_MUTEX(mutex) \
-    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER
+    pthread_mutex_t mutex
 
 /**
  * @brief Macro for locking mutexes.
  *
- * @param mutex The mutex to lock.
+ * @param mutex_ptr Pointer to the mutex variable to lock.
  *
  * Example usage:
  * ```
  * LOCK_MUTEX(&my_mutex);
  * ```
  */
-#define LOCK_MUTEX(mutex) \
+#define LOCK_MUTEX(mutex_ptr) \
     do { \
-        if (pthread_mutex_lock(&mutex) != 0) { \
+        if (pthread_mutex_lock(mutex_ptr) != 0) { \
             HANDLE_ERROR("Failed to acquire mutex lock"); \
         } \
     } while (0)
@@ -802,19 +804,20 @@ typedef void* (*lambda_t)(void*);
 /**
  * @brief Macro for unlocking mutexes.
  *
- * @param mutex The mutex to unlock.
+ * @param mutex_ptr Pointer to the mutex variable to unlock.
  *
  * Example usage:
  * ```
  * UNLOCK_MUTEX(&my_mutex);
  * ```
  */
-#define UNLOCK_MUTEX(mutex) \
+#define UNLOCK_MUTEX(mutex_ptr) \
     do { \
-        if (pthread_mutex_unlock(&mutex) != 0) { \
+        if (pthread_mutex_unlock(mutex_ptr) != 0) { \
             HANDLE_ERROR("Failed to release mutex lock"); \
         } \
     } while (0)
+
 /********************* Configuration Macros ***************************/
 
 /**
